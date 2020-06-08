@@ -87,6 +87,8 @@ void Win2DInDialog::MainPage::OnRegionsInvalidated(Microsoft::Graphics::Canvas::
 			center.y = static_cast<float>(control->ActualHeight) / 2;
 			auto radius = min(center.x, center.y);
 			drawingSession->FillCircle(center, radius, Windows::UI::Colors::Green);
+			delete drawingSession;
+			drawingSession = nullptr;
 		}
 	}
 }
