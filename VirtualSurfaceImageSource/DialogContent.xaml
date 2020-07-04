@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="VirtualSurfaceImageSource.DialogContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VirtualSurfaceImageSource"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <local:VirtualImages x:Name="images" Grid.Row="0"></local:VirtualImages>
+        <TextBlock Grid.Row="1" TextWrapping="WrapWholeWords" Text="If you resize the main window and the window is small, the rendering issues are not visible. If the window is big or maximize, the rendering defects are obvious. The rendered content disappears when you hover over the buttons below, or Alt+Tab a few times."></TextBlock>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Click="ButtonClose" Margin="20 0 0 0">Close</Button>
+            <Button Click="ButtonInvalidate">Invalidate</Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

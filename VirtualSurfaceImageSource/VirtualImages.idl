@@ -1,0 +1,8 @@
+namespace VirtualSurfaceImageSource
+{
+    [default_interface]
+    runtimeclass VirtualImages : Windows.UI.Xaml.Controls.UserControl
+    {
+        VirtualImages();
+    }
+}

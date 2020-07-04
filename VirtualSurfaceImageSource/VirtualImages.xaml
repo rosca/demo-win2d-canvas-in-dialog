@@ -1,0 +1,27 @@
+﻿<UserControl
+    x:Class="VirtualSurfaceImageSource.VirtualImages"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VirtualSurfaceImageSource"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="A very big VirtualSurfaceImageSource rendering in a scroll view. If you scroll in the ContentDialog you should see rendering defects." TextWrapping="WrapWholeWords" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="A Border element with the background painted with a brush with VirtualSurfaceImageSource. It does not render anything inside ContentDialog." TextWrapping="WrapWholeWords" />
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" Grid.Column="0" Grid.Row="1" BorderBrush="Gray" BorderThickness="3"  Margin="10">
+            <Image Width="100000" Height="100000" x:Name="bigImageContainer"></Image>
+        </ScrollViewer>
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="Gray" BorderThickness="3" Margin="10" x:Name="smallImageContainer" SizeChanged="smallImageContainer_SizeChanged">
+        </Border>
+    </Grid>
+</UserControl>

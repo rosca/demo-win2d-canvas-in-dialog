@@ -1,0 +1,8 @@
+namespace VirtualSurfaceImageSource
+{
+    [default_interface]
+    runtimeclass DialogContent : Windows.UI.Xaml.Controls.UserControl
+    {
+        DialogContent();
+    }
+}
