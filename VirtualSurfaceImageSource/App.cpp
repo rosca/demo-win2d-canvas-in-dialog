@@ -8,6 +8,7 @@ using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
+using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace VirtualSurfaceImageSource;
@@ -21,6 +22,9 @@ App::App()
 {
     InitializeComponent();
     Suspending({ this, &App::OnSuspending });
+    EnteredBackground({ this, &App::onEnteringBackground });
+    LeavingBackground({ this, &App::onLeavingBackground });
+    Resuming({ this, &App::onApplicationResuming });
 
 #if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
     UnhandledException([this](IInspectable const&, UnhandledExceptionEventArgs const& e)
@@ -116,4 +120,16 @@ void App::OnSuspending([[maybe_unused]] IInspectable const& sender, [[maybe_unus
 void App::OnNavigationFailed(IInspectable const&, NavigationFailedEventArgs const& e)
 {
     throw hresult_error(E_FAIL, hstring(L"Failed to load Page ") + e.SourcePageType().Name);
+}
+
+void App::onEnteringBackground([[maybe_unused]] IInspectable const& sender, [[maybe_unused]] EnteredBackgroundEventArgs const& e) {
+    enteredBackGround_ = true;
+}
+
+void App::onLeavingBackground([[maybe_unused]] IInspectable const& sender, [[maybe_unused]] LeavingBackgroundEventArgs const& e) {
+    enteredBackGround_ = false;
+}
+
+void App::onApplicationResuming([[maybe_unused]] IInspectable const& sender, [[maybe_unused]] IInspectable const&) {
+    // Application is resuming
 }

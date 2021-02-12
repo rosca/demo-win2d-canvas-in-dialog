@@ -5,9 +5,21 @@
 #endif
 
 #include <functional>
+#include <chrono>
+#include <thread>
+#include <future>
+#include <d3d10.h>
+#include <winrt/Windows.UI.Xaml.Documents.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.UI.Core.h>
 
+using namespace std::chrono;
+using namespace std::chrono_literals;
 using namespace winrt;
+using namespace Windows::UI::Text;
 using namespace Windows::UI::Xaml;
+using namespace Windows::UI::Xaml::Controls;
+using namespace Windows::UI::Xaml::Documents;
 using namespace Windows::UI::Xaml::Media;
 using namespace winrt::Windows::Foundation;
 using namespace winrt::Windows::Graphics::Display;
@@ -79,9 +91,8 @@ winrt::Windows::Foundation::Rect toRect(RECT const& rect, float dpi) {
 inline void ThrowIfFailed(HRESULT hr) {
     if (FAILED(hr)) {
         throw winrt::hresult_error(hr);
-;    }
+    } 
 }
-
 }
 
 namespace winrt::VirtualSurfaceImageSource::implementation
@@ -96,15 +107,55 @@ namespace winrt::VirtualSurfaceImageSource::implementation
         m_bigSource = make_self<VirtualSurfaceImage>(bigImageContainer().ActualSize(), m_d2dDevice.get());
         bigImageContainer().Source(m_bigSource->source());
 
-        m_smallSource = make_self<VirtualSurfaceImage>(smallImageContainer().ActualSize(), m_d2dDevice.get());
-        ImageBrush brush;
-        brush.ImageSource(m_smallSource->source());
-        smallImageContainer().Background(brush);
+        //m_smallSource = make_self<VirtualSurfaceImage>(smallImageContainer().ActualSize(), m_d2dDevice.get());
+        //ImageBrush brush;
+        //brush.ImageSource(m_smallSource->source());
+        //smallImageContainer().Background(brush);
     }
 
     void VirtualImages::invalidate() {
         m_bigSource->invalidate();
         m_smallSource->invalidate();
+        m_textBlock->invalidate();
+    }
+
+    fire_and_forget VirtualImages::Click_Me(IInspectable const&, RoutedEventArgs const&) {
+        co_await 10s;
+        // co_await winrt::resume_background();
+        co_await winrt::resume_foreground(label1().Dispatcher());
+        m_textBlock = make_self<VirtualSurfaceImage>(label1().ActualSize(), m_d2dDevice.get());
+        ImageBrush brush;
+        brush.ImageSource(m_textBlock->source());
+        label1().Background(brush);
+        
+        auto paragraph = Paragraph();
+
+        label2().TextWrapping(TextWrapping::Wrap);
+        auto hyperlink = Hyperlink();
+        auto run = Run();
+        run.Text(L"Google");
+        auto uri = Uri(L"http://www.google.com");
+        hyperlink.NavigateUri(uri);
+        hyperlink.UnderlineStyle(UnderlineStyle::Single);
+        hyperlink.Inlines().Append(run);
+
+        auto italic = Italic();
+        italic.Inlines().Append(hyperlink);
+
+        auto run1 = Run();
+        auto run2 = Run();
+        run1.Text(L"This shows a hyperlink in a paragraph of text.You can click it to open ");
+        run2.Text(L" in your browser.");
+
+        paragraph.Inlines().Append(run1);
+        paragraph.Inlines().Append(italic);
+        paragraph.Inlines().Append(run2);
+
+        // co_await 10s;
+        // co_await winrt::resume_background();
+        // co_await winrt::resume_after(5s);
+        // co_await winrt::resume_foreground(label2().Dispatcher());
+        label2().Blocks().Append(paragraph);
     }
 
     void VirtualImages::smallImageContainer_SizeChanged(::IInspectable const&, SizeChangedEventArgs const& e) {
@@ -132,6 +183,15 @@ namespace winrt::VirtualSurfaceImageSource::implementation
             NULL));
 
         auto dxgiDevice = m_d3dDevice.as<IDXGIDevice>();
+
+        // To enable multi-threaded access (optional)
+        com_ptr<ID3D10Multithread> d3dMultiThread;
+
+        m_d3dDevice->QueryInterface(
+            __uuidof(ID3D10Multithread),
+            (void**)&d3dMultiThread);
+
+        d3dMultiThread->SetMultithreadProtected(TRUE);
 
         // Create the D2D device
         ThrowIfFailed(D2D1CreateDevice(dxgiDevice.get(), NULL, m_d2dDevice.put()));
@@ -165,7 +225,8 @@ namespace winrt::VirtualSurfaceImageSource::implementation
             auto& rect = rects[i];
             com_ptr<ID2D1DeviceContext> context;
             POINT offset;
-            ThrowIfFailed(nativeD2D->BeginDraw(rect, __uuidof(ID2D1DeviceContext), context.put_void(), &offset));
+            auto hr = nativeD2D->BeginDraw(rect, __uuidof(ID2D1DeviceContext), context.put_void(), &offset);
+            ThrowIfFailed(hr);
             D2D1_COLOR_F color{ 0, 1, 0, 1 };  // green
             context->Clear(color);
             nativeD2D->EndDraw();

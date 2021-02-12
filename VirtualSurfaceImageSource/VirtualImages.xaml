@@ -21,7 +21,15 @@
         <ScrollViewer HorizontalScrollBarVisibility="Visible" Grid.Column="0" Grid.Row="1" BorderBrush="Gray" BorderThickness="3"  Margin="10">
             <Image Width="100000" Height="100000" x:Name="bigImageContainer"></Image>
         </ScrollViewer>
-        <Border Grid.Column="1" Grid.Row="1" BorderBrush="Gray" BorderThickness="3" Margin="10" x:Name="smallImageContainer" SizeChanged="smallImageContainer_SizeChanged">
-        </Border>
+        <!-- <Border Grid.Column="1" Grid.Row="1" BorderBrush="Gray" BorderThickness="3" Margin="10" x:Name="smallImageContainer" SizeChanged="smallImageContainer_SizeChanged">
+        </Border> -->
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <Button Content="Click Me!" Click="Click_Me" Margin="10"/>
+            <ScrollViewer Height="200" Width="300" BorderBrush="Gray" BorderThickness="3" x:Name="label1">
+                <StackPanel>
+                    <RichTextBlock x:Name="label2" Margin="10"/>
+                </StackPanel>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -11,6 +11,7 @@
 #include <D3d11.h>
 #include <D2d1_1.h>
 #include <windows.ui.xaml.media.dxinterop.h>
+#include <winrt/Windows.Foundation.Collections.h>
 
 namespace winrt::VirtualSurfaceImageSource::implementation
 {
@@ -40,6 +41,7 @@ namespace winrt::VirtualSurfaceImageSource::implementation
     private:
         com_ptr<VirtualSurfaceImage> m_bigSource;
         com_ptr<VirtualSurfaceImage> m_smallSource;
+        com_ptr<VirtualSurfaceImage> m_textBlock;
 
         winrt::com_ptr<ID3D11Device> m_d3dDevice;
         winrt::com_ptr<ID2D1Device> m_d2dDevice;
@@ -48,6 +50,7 @@ namespace winrt::VirtualSurfaceImageSource::implementation
 
     public:
         void smallImageContainer_SizeChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::SizeChangedEventArgs const& e);
+        fire_and_forget Click_Me(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
     };
 }
 
